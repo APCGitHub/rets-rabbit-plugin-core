@@ -136,6 +136,33 @@ class ApiService
     }
 
     /**
+     * Fetch a single property
+     *
+     * @param  string|int $id
+     * @param  array  $params
+     * @return ApiResponse
+     */
+    public function property($id, $params = array())
+    {
+        $url = $this->apiEndpoint . "/property($id)";
+
+        return $this->getRequest($url, $params);
+    }
+
+    /**
+     * Run a search query against the property endpoint
+     *
+     * @param  array  $params
+     * @return ApiResponse
+     */
+    public function properties($params = array())
+    {
+        $url = $this->apiEndpoint . "/property";
+
+        return $this->getRequest($url, $params)
+    }
+
+    /**
      * ---------------------------------------------------------
      * | Private Methods for doing all the helpful things
      * ---------------------------------------------------------
@@ -197,11 +224,11 @@ class ApiService
 	 *
 	 * @param  string $endpoint
 	 * @param  array  $params
-	 * @return array
+	 * @return ApiResponse
 	 */
 	private function getRequest($endpoint, array $params = array(), $needsToken = true)
 	{
-		$body = array();
+		$response = new ApiResponse;
 
 		try {
 			$res = $this->client->get($endpoint, array(
@@ -210,13 +237,16 @@ class ApiService
 			));
 
 			$body = json_decode($res->getBody(), true);
+
+            $response->successful()->setContent($body);
 		} catch (BadResponseException $e) {
 			$res = $e->getResponse();
             $body = $res->getBody()->getContents();
 
             $body = json_decode($body, true);
+            $response->failed()->setContent($body);
 		}
 
-		return $body;
+		return $response;
 	}
 }
