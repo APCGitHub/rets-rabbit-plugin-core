@@ -25,19 +25,11 @@ class ComposerStaticInitabf38d2541ef5dabb04b89fd3608ac54
         array (
             'Psr\\Http\\Message\\' => 17,
         ),
-        'N' => 
-        array (
-            'Noodlehaus\\' => 11,
-        ),
         'G' => 
         array (
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
-        ),
-        'D' => 
-        array (
-            'Dotenv\\' => 7,
         ),
     );
 
@@ -54,10 +46,6 @@ class ComposerStaticInitabf38d2541ef5dabb04b89fd3608ac54
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Noodlehaus\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/hassankhan/config/src',
-        ),
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
@@ -70,21 +58,9 @@ class ComposerStaticInitabf38d2541ef5dabb04b89fd3608ac54
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Dotenv\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
-        ),
     );
 
     public static $classMap = array (
-        'Dotenv\\Dotenv' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Dotenv.php',
-        'Dotenv\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Exception/ExceptionInterface.php',
-        'Dotenv\\Exception\\InvalidCallbackException' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Exception/InvalidCallbackException.php',
-        'Dotenv\\Exception\\InvalidFileException' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Exception/InvalidFileException.php',
-        'Dotenv\\Exception\\InvalidPathException' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Exception/InvalidPathException.php',
-        'Dotenv\\Exception\\ValidationException' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Exception/ValidationException.php',
-        'Dotenv\\Loader' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Loader.php',
-        'Dotenv\\Validator' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Validator.php',
         'GuzzleHttp\\Client' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Client.php',
         'GuzzleHttp\\ClientInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/ClientInterface.php',
         'GuzzleHttp\\Cookie\\CookieJar' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Cookie/CookieJar.php',
@@ -153,22 +129,6 @@ class ComposerStaticInitabf38d2541ef5dabb04b89fd3608ac54
         'GuzzleHttp\\RetryMiddleware' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/RetryMiddleware.php',
         'GuzzleHttp\\TransferStats' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/TransferStats.php',
         'GuzzleHttp\\UriTemplate' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/UriTemplate.php',
-        'Noodlehaus\\AbstractConfig' => __DIR__ . '/..' . '/hassankhan/config/src/AbstractConfig.php',
-        'Noodlehaus\\Config' => __DIR__ . '/..' . '/hassankhan/config/src/Config.php',
-        'Noodlehaus\\ConfigInterface' => __DIR__ . '/..' . '/hassankhan/config/src/ConfigInterface.php',
-        'Noodlehaus\\ErrorException' => __DIR__ . '/..' . '/hassankhan/config/src/ErrorException.php',
-        'Noodlehaus\\Exception' => __DIR__ . '/..' . '/hassankhan/config/src/Exception.php',
-        'Noodlehaus\\Exception\\EmptyDirectoryException' => __DIR__ . '/..' . '/hassankhan/config/src/Exception/EmptyDirectoryException.php',
-        'Noodlehaus\\Exception\\FileNotFoundException' => __DIR__ . '/..' . '/hassankhan/config/src/Exception/FileNotFoundException.php',
-        'Noodlehaus\\Exception\\ParseException' => __DIR__ . '/..' . '/hassankhan/config/src/Exception/ParseException.php',
-        'Noodlehaus\\Exception\\UnsupportedFormatException' => __DIR__ . '/..' . '/hassankhan/config/src/Exception/UnsupportedFormatException.php',
-        'Noodlehaus\\FileParser\\AbstractFileParser' => __DIR__ . '/..' . '/hassankhan/config/src/FileParser/AbstractFileParser.php',
-        'Noodlehaus\\FileParser\\FileParserInterface' => __DIR__ . '/..' . '/hassankhan/config/src/FileParser/FileParserInterface.php',
-        'Noodlehaus\\FileParser\\Ini' => __DIR__ . '/..' . '/hassankhan/config/src/FileParser/Ini.php',
-        'Noodlehaus\\FileParser\\Json' => __DIR__ . '/..' . '/hassankhan/config/src/FileParser/Json.php',
-        'Noodlehaus\\FileParser\\Php' => __DIR__ . '/..' . '/hassankhan/config/src/FileParser/Php.php',
-        'Noodlehaus\\FileParser\\Xml' => __DIR__ . '/..' . '/hassankhan/config/src/FileParser/Xml.php',
-        'Noodlehaus\\FileParser\\Yaml' => __DIR__ . '/..' . '/hassankhan/config/src/FileParser/Yaml.php',
         'Psr\\Http\\Message\\MessageInterface' => __DIR__ . '/..' . '/psr/http-message/src/MessageInterface.php',
         'Psr\\Http\\Message\\RequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/RequestInterface.php',
         'Psr\\Http\\Message\\ResponseInterface' => __DIR__ . '/..' . '/psr/http-message/src/ResponseInterface.php',
@@ -181,6 +141,11 @@ class ComposerStaticInitabf38d2541ef5dabb04b89fd3608ac54
         'RetsRabbit\\Bridges\\CraftBridge' => __DIR__ . '/../..' . '/src/Bridges/CraftBridge.php',
         'RetsRabbit\\Bridges\\EEBridge' => __DIR__ . '/../..' . '/src/Bridges/EEBridge.php',
         'RetsRabbit\\Bridges\\iCmsBridge' => __DIR__ . '/../..' . '/src/Bridges/iCmsBridge.php',
+        'RetsRabbit\\MediaResource\\MediaResource' => __DIR__ . '/../..' . '/src/Resources/MediaResource.php',
+        'RetsRabbit\\Resources\\OpenHousesResource' => __DIR__ . '/../..' . '/src/Resources/OpenHousesResource.php',
+        'RetsRabbit\\Resources\\PropertiesResource' => __DIR__ . '/../..' . '/src/Resources/PropertiesResource.php',
+        'RetsRabbit\\Resources\\aResource' => __DIR__ . '/../..' . '/src/Resources/aResource.php',
+        'RetsRabbit\\Resources\\iResource' => __DIR__ . '/../..' . '/src/Resources/iResource.php',
         'Symfony\\Component\\Yaml\\Command\\LintCommand' => __DIR__ . '/..' . '/symfony/yaml/Command/LintCommand.php',
         'Symfony\\Component\\Yaml\\Dumper' => __DIR__ . '/..' . '/symfony/yaml/Dumper.php',
         'Symfony\\Component\\Yaml\\Escaper' => __DIR__ . '/..' . '/symfony/yaml/Escaper.php',
