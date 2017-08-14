@@ -90,6 +90,14 @@ class ApiService
      */
     public function getAccessToken($params = array())
     {
+        if(!isset($params['client_id'])) {
+            throw new \Exception("You must pass in a client ID");
+        }
+
+        if(!isset($params['client_secret'])) {
+            throw new \Exception("You must pass in a client secret");
+        }
+
         $res = $this->postRequest($this->tokenEndpoint, [
             'client_id'         => $params['client_id'],
             'client_secret'     => $params['client_secret'],
