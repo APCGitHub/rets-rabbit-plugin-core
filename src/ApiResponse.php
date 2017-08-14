@@ -16,7 +16,7 @@ class ApiResponse
      *
      * @var bool
      */
-    private $success = true;
+    private $success = false;
 
     /**
      * The body of the API response
