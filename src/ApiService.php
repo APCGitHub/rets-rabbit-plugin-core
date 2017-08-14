@@ -136,59 +136,24 @@ class ApiService
     }
 
     /**
-     * Fetch a single property
-     *
-     * @param  string|int $id
-     * @param  array  $params
-     * @return ApiResponse
+     * Build an api url from the input segment
+     * @param  string $segment
+     * @return string
      */
-    public function property($id, $params = array())
+    public function buildApiUrl($segment = '')
     {
-        $url = $this->apiEndpoint . "/property($id)";
+        $url = $this->apiEndpoint;
 
-        return $this->getRequest($url, $params);
-    }
-
-    /**
-     * Run a search query against the property endpoint
-     *
-     * @param  array  $params
-     * @return ApiResponse
-     */
-    public function properties($params = array())
-    {
-        $url = $this->apiEndpoint . "/property";
-
-        return $this->getRequest($url, $params)
-    }
-
-    /**
-     * ---------------------------------------------------------
-     * | Private Methods for doing all the helpful things
-     * ---------------------------------------------------------
-     */
-
-    /**
-	 * Apply the json content type.
-	 *
-	 * @param $authenticate bool
-	 * @return array
-	 */
-	private function headers($authenticate = false)
-	{
-		$headers = array(
-			'Accept' => 'application/json',
-		);
-
-        //Grab token
-        if($authenticate) {
-            $token = $this->cmsBridge->getAccessToken();
-
-            $headers['Authorization'] = "Bearer $token";
+        if(!empty($semgment)) {
+            if(substr($segment, 0, 1) === '/') {
+                $url .= $segment;
+            } else {
+                $url = $url . '/' . $segment;
+            }
         }
 
-		return $headers;
-	}
+        return $url;
+    }
 
     /**
 	 * Make a post request to {@code $endpoint} with form params
@@ -198,7 +163,7 @@ class ApiService
 	 * @param  array  $form
 	 * @return array
 	 */
-	private function postRequest($endpoint, array $form = array(), $needsToken = false)
+	public function postRequest($endpoint, array $form = array(), $needsToken = false)
 	{
 		$body = array();
 
@@ -226,7 +191,7 @@ class ApiService
 	 * @param  array  $params
 	 * @return ApiResponse
 	 */
-	private function getRequest($endpoint, array $params = array(), $needsToken = true)
+	public function getRequest($endpoint, array $params = array(), $needsToken = true)
 	{
 		$response = new ApiResponse;
 
@@ -248,5 +213,33 @@ class ApiService
 		}
 
 		return $response;
+	}
+
+    /*
+     ---------------------------------------------------------
+     | Private Methods for doing all the helpful things
+     ---------------------------------------------------------
+     */
+
+    /**
+	 * Apply the json content type.
+	 *
+	 * @param $authenticate bool
+	 * @return array
+	 */
+	private function headers($authenticate = false)
+	{
+		$headers = array(
+			'Accept' => 'application/json',
+		);
+
+        //Grab token
+        if($authenticate) {
+            $token = $this->cmsBridge->getAccessToken();
+
+            $headers['Authorization'] = "Bearer $token";
+        }
+
+		return $headers;
 	}
 }
