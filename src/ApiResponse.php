@@ -70,4 +70,24 @@ class ApiResponse
 
         return $this;
     }
+
+    /**
+     * Check if succeeded
+     *
+     * @return bool
+     */
+    public function didSucceed()
+    {
+        return $this->success;
+    }
+
+    /**
+     * Check if failed
+     *
+     * @return bool
+     */
+    public function didFail()
+    {
+        return $this->failed;
+    }
 }
