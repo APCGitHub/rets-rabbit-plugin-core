@@ -65,11 +65,6 @@ class ApiService
     {
         $this->cmsBridge = $bridge;
 
-        //Allow user to override the base api url.
-        if(false) {
-            $this->baseApiEndpoint = '';
-        }
-
         //Trim off trailing slash
         if(substr($this->baseApiEndpoint, -1) === '/') {
             $this->baseApiEndpoint = substr($this->baseApiEndpoint, 0, strlen($this->baseApiEndpoint) - 2);
