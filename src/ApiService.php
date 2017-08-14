@@ -88,11 +88,11 @@ class ApiService
      *
      * @return ApiResponse;
      */
-    public function getAccessToken()
+    public function getAccessToken($params = array())
     {
         $res = $this->postRequest($this->tokenEndpoint, [
-            'client_id'         => '',
-            'client_secret'     => '',
+            'client_id'         => $params['client_id'],
+            'client_secret'     => $params['client_secret'],
             'grant_type'        => 'client_credentials'
         ]);
 
