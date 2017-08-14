@@ -9,7 +9,7 @@ class ApiResponse
      *
      * @var bool
      */
-    private $error = false;
+    private $failed = false;
 
     /**
      * Flag for if the response was successful
