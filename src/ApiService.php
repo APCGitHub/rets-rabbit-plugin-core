@@ -70,10 +70,6 @@ class ApiService
             $this->baseApiEndpoint = substr($this->baseApiEndpoint, 0, strlen($this->baseApiEndpoint) - 2);
         }
 
-        //Set up api and token endpoints dynamically
-        $this->apiEndpoint = $this->baseApiEndpoint . '/' . $this->apiVersionEndpoint;
-        $this->tokenEndpoint = $this->baseApiEndpoint . '/' . $this->apiOauthEndpoint;
-
         //Set up new guzzle client for this instance;
         $this->client = new Client();
     }
@@ -93,6 +89,8 @@ class ApiService
             throw new \Exception("You must pass in a client secret");
         }
 
+        $this->checkIfEndpointsSet();
+
         $res = $this->postRequest($this->tokenEndpoint, [
             'client_id'         => $params['client_id'],
             'client_secret'     => $params['client_secret'],
@@ -102,18 +100,7 @@ class ApiService
         $response = new ApiResponse;
 
         if(isset($res['access_token'])) {
-            $token = $res['access_token'];
-            $ttl = isset($res['expires_in']) ? $res['expires_in'] : null;
-            $savedToken = false;
-
-            if(!is_null($ttl))
-                $savedToken = $this->cmsBridge->saveAccessToken($token, $ttl);
-            else
-                $savedToken = $this->cmsBridge->saveAccessToken($token);
-
-            $response->successful()->setContent([
-                'token' => $token
-            ]);
+            $response->successful()->setContent($res);
 
             return $response;
         }
@@ -130,10 +117,10 @@ class ApiService
      * @param  string $apiEndpoint
      * @return $this
      */
-    public function overrideApiEndpoint($apiEndpoint = '')
+    public function overrideBaseApiEndpoint($apiEndpoint = '')
     {
         if(!empty($apiEndpoint))
-            $this->apiEndpoint = $apiEndpoint;
+            $this->baseApiEndpoint = $apiEndpoint;
 
         return $this;
     }
@@ -145,9 +132,10 @@ class ApiService
      */
     public function buildApiUrl($segment = '')
     {
+        $this->checkIfEndpointsSet();
         $url = $this->apiEndpoint;
 
-        if(!empty($semgment)) {
+        if(!empty($segment)) {
             if(substr($segment, 0, 1) === '/') {
                 $url .= $segment;
             } else {
@@ -245,4 +233,20 @@ class ApiService
 
 		return $headers;
 	}
+
+    /**
+     * Check if the api endpoints need setting
+     *
+     * @return void
+     */
+    private function checkIfEndpointsSet()
+    {
+        if(empty($this->apiEndpoint)) {
+            $this->apiEndpoint = $this->baseApiEndpoint . '/' . $this->apiVersionEndpoint;
+        }
+
+        if(empty($this->tokenEndpoint)) {
+            $this->tokenEndpoint = $this->baseApiEndpoint . '/' . $this->apiOauthEndpoint;
+        }
+    }
 }
