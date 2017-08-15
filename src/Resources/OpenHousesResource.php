@@ -15,7 +15,7 @@ class OpenHousesResource extends aResource
     {
         $url = $this->api->buildApiUrl("/open-house($id)");
 
-        return $this->api->getRequest($url, $params);
+        return $this->api->getRequest($url, $params, true);
     }
 
     /**
@@ -28,7 +28,7 @@ class OpenHousesResource extends aResource
     {
         $url = $this->api->buildApiUrl("/open-house");
 
-        return $this->api->getRequest($url, $params);
+        return $this->api->getRequest($url, $params, true);
     }
 
     /**
@@ -40,6 +40,6 @@ class OpenHousesResource extends aResource
     {
         $url = $this->api->buildApiUrl('/open-house/$metadata');
 
-        return $this->api->getRequest($url);
+        return $this->api->getRequest($url, $params, true);
     }
 }

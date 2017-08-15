@@ -2,6 +2,8 @@
 
 namespace RetsRabbit\Resources;
 
+use RetsRabbit\ApiService;
+
 abstract class aResource implements iResource
 {
     /**

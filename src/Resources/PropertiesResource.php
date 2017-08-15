@@ -15,7 +15,7 @@ class PropertiesResource extends aResource
     {
         $url = $this->api->buildApiUrl("/property($id)");
 
-        return $this->api->getRequest($url, $params);
+        return $this->api->getRequest($url, $params, true);
     }
 
     /**
@@ -28,7 +28,7 @@ class PropertiesResource extends aResource
     {
         $url = $this->api->buildApiUrl("/property");
 
-        return $this->api->getRequest($url, $params);
+        return $this->api->getRequest($url, $params, true);
     }
 
     /**
@@ -40,7 +40,7 @@ class PropertiesResource extends aResource
     {
         $url = $this->api->buildApiUrl('/property/$metadata');
 
-        return $this->api->getRequest($url);
+        return $this->api->getRequest($url, $params, true);
     }
 
     /**
@@ -54,7 +54,7 @@ class PropertiesResource extends aResource
     {
         $url = $this->api->buildApiUrl("/property($id)/media");
 
-        return $this->api->getRequest($url, $params);
+        return $this->api->getRequest($url, $params, true);
     }
 
     /**
@@ -68,6 +68,6 @@ class PropertiesResource extends aResource
     {
         $url = $this->api->buildApiUrl("/property($id)/open-house");
 
-        return $this->api->getRequest($url, $params);
+        return $this->api->getRequest($url, $params, true);
     }
 }

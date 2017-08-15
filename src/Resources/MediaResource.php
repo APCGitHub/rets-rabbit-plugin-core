@@ -36,6 +36,6 @@ class MediaResource extends aResource;
     {
         $url = $this->api->buildApiUrl('/media/$metadata');
 
-        return $this->api->getRequest($url);
+        return $this->api->getRequest($url, $params, true);
     }
 }
