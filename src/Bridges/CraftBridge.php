@@ -20,6 +20,13 @@ class CraftBridge implements iCmsBridge
     private $settings;
 
     /**
+     * Method handle for fetching a token from the CMS
+     *
+     * @var callable
+     */
+    private $tokenFetcher = null;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -39,16 +46,13 @@ class CraftBridge implements iCmsBridge
     }
 
     /**
-     * Save an access token from the RR api.
+     * Set the method which will fetch tokens from the cache.
      *
-     * @param  string $token
-     * @return bool
+     * @param callable $method
      */
-    public function saveAccessToken($token)
+    public function setTokenFetcher($method)
     {
-        $token = $this->app->securityService->encrypt($token);
-
-        return $this->app->cache->add('/rets-rabbit/access_token', $token);
+        $this->tokenFetcher = $method;
     }
 
     /**
@@ -58,11 +62,7 @@ class CraftBridge implements iCmsBridge
      */
     public function getAccessToken()
     {
-        $token = $this->app->cache->get('/rets-rabbit/access_token');
-
-        if($token) {
-            $token = $this->app->securityService->decrypt($token);
-        }
+        $token = $callable();
 
         return $token;
     }

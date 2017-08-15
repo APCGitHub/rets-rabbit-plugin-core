@@ -12,12 +12,11 @@ interface iCmsBridge
     public function getCms();
 
     /**
-     * Save an access token from the RR API;
+     * Set the method which will fetch tokens from the cache.
      *
-     * @param $token string
-     * @return bool
+     * @param callable $method
      */
-    public function saveAccessToken($token);
+    public function setTokenFetcher($method);
 
     /**
      * Fetch a saved RR token from the CMS

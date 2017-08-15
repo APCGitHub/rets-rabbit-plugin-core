@@ -12,13 +12,18 @@ class EEBridge implements iCmsBridge
     private $app = null;
 
     /**
+     * Method handle for fetching a token from the CMS
+     *
+     * @var callable
+     */
+    private $tokenFetcher = null;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        if(function_exists('ee')) {
-            $this->app = ee();
-        }
+        $this->app = get_instance();
     }
 
     /**
@@ -32,30 +37,25 @@ class EEBridge implements iCmsBridge
     }
 
     /**
-     * Save an access token from the RR api.
+     * Set the method which will fetch tokens from the cache.
      *
-     * @param  string $token
-     * @return bool
+     * @param callable $method
      */
-    public function saveAccessToken($token, $ttl = 3600)
+    public function setTokenFetcher($method)
     {
-        $token = $this->app('Encrypt')->encrypt($token);
-
-        return $this->app->cache->save('/rets-rabbit/access_token', $token, $ttl);
+        $this->tokenFetcher = $method;
     }
 
     /**
      * Fetch a saved RR token from the CMS
      *
+     * @param callable
      * @return string|null
      */
     public function getAccessToken()
     {
-        $token = $this->app->cache->get('/rets-rabbit/access_token');
-
-        if($token) {
-            $token = $this->app('Encrypt')->decrypt($token);
-        }
+        $fetcher = $this->tokenFetcher;
+        $token = $fetcher();
 
         return $token;
     }
