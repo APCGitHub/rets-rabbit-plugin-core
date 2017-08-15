@@ -35,7 +35,7 @@ class ServersResource extends aResource
      *
      * @return ApiResponse
      */
-    public function metadata()
+    public function metadata($params = array())
     {
         return $this->search();
     }
