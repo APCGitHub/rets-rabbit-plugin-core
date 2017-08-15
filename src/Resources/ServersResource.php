@@ -7,9 +7,11 @@ class ServersResource extends aResource
     /**
      * Fetch a single server details
      *
+     * @param int $id
+     * @param array $params
      * @throws \Exception
      */
-    public function single()
+    public function single($id, $params = array())
     {
         throw new \Exception("Not yet implemented.");
     }
