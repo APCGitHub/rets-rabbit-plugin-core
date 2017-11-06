@@ -1,6 +1,6 @@
 <?php
 
-namespace RetsRabbit\QueryBuilder;
+namespace RetsRabbit;
 
 class QueryBuilder
 {
