@@ -159,10 +159,10 @@ class QueryBuilder
 
 		$rrFields = array_filter($params, function ($key) {
 			return substr($key, 0, 2) == 'rr';
-		});
+		}, ARRAY_FILTER_USE_KEY);
 
 		foreach($rrFields as $key => $values) {
-			$newKey = substr(3);
+			$newKey = substr($key, 3);
 
 			$newParams[$newKey] = $values;
 		}
