@@ -47,7 +47,7 @@ class QueryBuilder
 		}
 
 		if(isset($params['top'])) {
-			$top = $this->formatSkip($params);
+			$top = $this->formatTop($params);
 
 			if(!is_null($top)) {
 				$data['$top'] = $top;
