@@ -12,8 +12,12 @@ class QueryBuilder
 	public function format($params)
 	{
 		$data = array();
+		//Grab only {rr:field_name} fields
 		$params = $this->filterRetsRabbitFields($params);
+		//Remove the {rr} prefix from all fields
+		$params = $this->formatRetsRabbitFields($params);
 
+		//parse for $filter
 		if(isset($params['filter'])) {
 			$filter = $this->formatFilter($params);
 
@@ -22,6 +26,7 @@ class QueryBuilder
 			}
 		}
 
+		//parse for $select
 		if(isset($params['select'])) {
 			$select = $this->formatSelect($params);
 
@@ -30,6 +35,7 @@ class QueryBuilder
 			}
 		}
 
+		//parse for $orderby
 		if(isset($params['orderby'])) {
 			$orderby = $this->formatOrderBy($params);
 
@@ -38,6 +44,7 @@ class QueryBuilder
 			}
 		}
 
+		//parse for $skip
 		if(isset($params['skip'])) {
 			$skip = $this->formatSkip($params);
 
@@ -46,6 +53,7 @@ class QueryBuilder
 			}
 		}
 
+		//parse for $top
 		if(isset($params['top'])) {
 			$top = $this->formatTop($params);
 
@@ -147,21 +155,31 @@ class QueryBuilder
 	}
 
 	/**
-	 * Find all fields prefixed with {rr:} and create a new param array
-	 * whic has that {rr:} removed.
+	 * Find all fields prefixed with {rr:}
 	 * 
-	 * @param  $params array
+	 * @param  array $params
 	 * @return array
 	 */
 	private function filterRetsRabbitFields($params = array())
 	{
-		$newParams = array();
-
 		$rrFields = array_filter($params, function ($key) {
 			return substr($key, 0, 2) == 'rr';
 		}, ARRAY_FILTER_USE_KEY);
 
-		foreach($rrFields as $key => $values) {
+		return $rrFields;
+	}
+
+	/**
+	 * create a new param array which has that {rr:} removed
+	 * 
+	 * @param  array $params
+	 * @return array
+	 */
+	private function formatRetsRabbitFields($params = array())
+	{
+		$newParams = array();
+
+		foreach($params as $key => $values) {
 			$newKey = substr($key, 3);
 
 			$newParams[$newKey] = $values;
