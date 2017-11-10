@@ -15,7 +15,7 @@ class QueryParser
 	 */
 	public function __construct()
 	{
-		$this->builer = new QueryBuilder();
+		$this->builder = new QueryBuilder();
 	}
 
 	/**
