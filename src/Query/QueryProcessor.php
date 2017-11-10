@@ -114,7 +114,7 @@ class QueryProcessor
 	public function buildSelect()
 	{
 		if(count($this->builder->selects)) {
-			$this->query['$selects'] = implode(', ', $this->builder->selects);
+			$this->query['$select'] = implode(', ', $this->builder->selects);
 		}
 	}
 
