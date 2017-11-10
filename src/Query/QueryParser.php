@@ -179,7 +179,6 @@ class QueryParser
 			throw new QueryException("Malformed field name query for: $lastField");
 		}
 
-		$field = substr($lastField, 0, $pos);
 		preg_match_all("/\(([^\)]*)\)/", $lastField, $matches);
 
 		//Get first capturing group match
@@ -207,8 +206,8 @@ class QueryParser
 				throw new QueryException("The between operator requires two values separated by a pipe: v1|v2");
 			}
 
-			$this->builder->where(function ($q) use($fields, $value) {
-				foreach($fields as $f) {
+			$this->builder->where(function ($q) use($formattedFields, $value) {
+				foreach($formattedFields as $f) {
 					$q->whereBetween($f, [$value[0], $value[1]], 'or');
 				}
 			});
@@ -220,7 +219,7 @@ class QueryParser
 			$value = $value[0];
 
 			//standard single field and value
-			foreach($fields as $f) {
+			foreach($formattedFields as $f) {
 				$this->builder->where(function ($q) use($f, $operator, $value) {
 					$q->orWhere($f, $operator, $value);
 				});
