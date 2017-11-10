@@ -1,9 +1,23 @@
 <?php
 
-namespace RetsRabbit;
+namespace RetsRabbit\Query;
 
-class QueryBuilder
+
+class QueryParser
 {
+	/**
+	 * @var QueryBuilder
+	 */
+	private $builder;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->builer = new QueryBuilder();
+	}
+
 	/**
 	 * Format the form params as a RESO query
 	 * 
@@ -17,31 +31,21 @@ class QueryBuilder
 		//Remove the {rr} prefix from all fields
 		$params = $this->formatRetsRabbitFields($params);
 
-		//parse for $filter
-		if(isset($params['filter'])) {
-			$filter = $this->formatFilter($params);
-
-			if(!is_null($filter)) {
-				$data['$filter'] = $filter;
-			}
-		}
+		//build for $filter
+		$this->buildFilters($params);
 
 		//parse for $select
 		if(isset($params['select'])) {
 			$select = $this->formatSelect($params);
 
 			if(!is_null($select)) {
-				$data['$select'] = $select;
+				$this->builder->select($select);
 			}
 		}
 
 		//parse for $orderby
 		if(isset($params['orderby'])) {
-			$orderby = $this->formatOrderBy($params);
-
-			if(!is_null($orderby)) {
-				$data['$orderby'] = $orderby;
-			}
+			$this->buildOrderBy($params);
 		}
 
 		//parse for $skip
@@ -49,7 +53,7 @@ class QueryBuilder
 			$skip = $this->formatSkip($params);
 
 			if(!is_null($skip)) {
-				$data['$skip'] = $skip;
+				$this->builder->skip($skip);
 			}
 		}
 
@@ -58,37 +62,85 @@ class QueryBuilder
 			$top = $this->formatTop($params);
 
 			if(!is_null($top)) {
-				$data['$top'] = $top;
+				$this->builder->limit($top);
 			}
 		}
+
+		$data = $this->builder->get();
 
 		return $data;
 	}
 
+	/* 
+	 | -------------------------------------------
+	 |			Private Helper Methods
+	 | -------------------------------------------
+	 */
+
 	/**
 	 * @param  $params array
-	 * @return mixed
 	 */
-	private function formatFilter($params = array())
+	private function buildFilters($params = array())
 	{
-		$filter = null;
+		$filters = $this->getFilterParams($params);
 
-		return $filter;
+		if(sizeof($filters)) {
+			foreach($filters as $f => $value) {
+				$stmt = explode('|', $f);
+
+				if(sizeof($stmt) > 1) {
+					//Multiple fields means this is an OR statement
+					foreach($stmt as $_stmt) {
+
+					}
+				} elseif (sizeof($stmt) == 1) {
+					//Single field
+					$this->buildSingleFilter($stmt[0], $value);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param string $fieldData
+	 * @param string $value
+	 */
+	private function buildSingleFilter($fieldData, $value)
+	{
+		$value = explode('|', $value);
+		
+		if(($pos = strpos($fieldData, '(')) !== FALSE) {
+			$field = substr($fieldData, 0, $pos);
+			preg_match_all("/\(([^\)]*)\)/", $fieldData, $matches);
+
+			if(sizeof($matches) > 1) {
+				//Get first capturing group match
+				$operator = $matches[1][0];
+
+				if(sizeof($value) < 2) {
+					//standard single field and value
+					$this->builder->where($field, $operator, $value[0]);
+				} else {
+					//Single field multiple or values
+					foreach($value as $v) {
+						$this->builder->where(function ($q) {
+							$q->orWhere($field, $operator, $v);
+						});
+					}
+				}
+			}
+		}
 	}
 
 	/**
 	 * Format the orderby if it exists
 	 *
 	 * @param  $params array
-	 * @return mixed
 	 */
-	private function formatOrderBy($params = array())
+	private function buildOrderBy($params = array())
 	{
-		$orderby = null;
-
 		if(isset($params['orderby'])) {
 			$data = $params['orderby'];
-			$orderby = array();
 			$orders = explode('|', $data);
 
 			foreach($orders as $order) {
@@ -100,13 +152,10 @@ class QueryBuilder
 					$dir = $parts[1];
 				}
 
-				$orderby[] = "$field $dir";
+				$this->builder->orderBy($field, $dir);
 			}
 
-			$orderby = implode(', ', $orderby);
 		}
-
-		return $orderby;
 	}
 
 	/**
@@ -186,5 +235,25 @@ class QueryBuilder
 		}
 
 		return $newParams;
+	}
+
+	/**
+	 * Fetch only params which fall under the $filter param
+	 * 
+	 * @param  array $params
+	 * @return array
+	 */
+	private function getFilterParams($params = array())
+	{
+		$filters = array();
+		$passThrough = array('orderby', 'select', 'top', 'skip');
+
+		foreach($params as $key => $values) {
+			if(!in_array($key, $passThrough)) {
+				$filters[$key] = $values;
+			}
+		}
+
+		return $filters;
 	}
 }
