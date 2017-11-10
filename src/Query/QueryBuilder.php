@@ -172,7 +172,7 @@ class QueryBuilder
     public function skip($skip = 0)
     {
         if($skip >= 0) {
-            $this->skip = $skip;
+            $this->offset = $offset;
         }
 
         return $this;
