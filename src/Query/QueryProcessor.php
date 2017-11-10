@@ -140,7 +140,7 @@ class QueryProcessor
 	 */
 	public function buildTop()
 	{
-		if(isset($this->limit)) {
+		if(isset($this->builder->limit)) {
 			$this->query['$top'] = $this->limit;
 		}
 	}
@@ -150,7 +150,7 @@ class QueryProcessor
 	 */
 	public function buildSkip()
 	{
-		if(isset($this->offset)) {
+		if(isset($this->builder->offset)) {
 			$this->query['$skip'] = $this->offset;
 		}
 	}
