@@ -79,6 +79,8 @@ class QueryProcessor
 		$this->buildOrderby();
 		$this->buildWheres();
 		$this->buildSelect();
+		$this->buildTop();
+		$this->buildSkip();
 
 		return $this->query;
 	}
@@ -131,6 +133,26 @@ class QueryProcessor
 		}
 
 		$this->query['$orderby'] = $q;
+	}
+
+	/**
+	 * This method handles building the $top clause
+	 */
+	public function buildTop()
+	{
+		if(isset($this->limit)) {
+			$this->query['$top'] = $this->limit;
+		}
+	}
+
+	/**
+	 * This method handles building the $skip clause
+	 */
+	public function buildSkip()
+	{
+		if(isset($this->offset)) {
+			$this->query['$skip'] = $this->offset;
+		}
 	}
 
 	/**
