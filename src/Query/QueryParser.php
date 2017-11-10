@@ -153,11 +153,11 @@ class QueryParser
 				$this->builder->where($field, $operator, $value[0]);
 			} else {
 				//Single field multiple {or} values
-				foreach($value as $v) {
-					$this->builder->where(function ($q) use($field, $v, $operator) {
+				$this->builder->where(function ($q) use($value, $field, $operator) 
+					foreach($value as $v) {{
 						$q->orWhere($field, $operator, $v);
-					});
-				}
+					}
+				});
 			}
 		}
 	}
@@ -219,11 +219,11 @@ class QueryParser
 			$value = $value[0];
 
 			//standard single field and value
-			foreach($formattedFields as $f) {
-				$this->builder->where(function ($q) use($f, $operator, $value) {
+			$this->builder->where(function ($q) use($formattedFields, $operator, $value) {
+				foreach($formattedFields as $f) {
 					$q->orWhere($f, $operator, $value);
-				});
-			}
+				}
+			});
 		}
 	}
 
