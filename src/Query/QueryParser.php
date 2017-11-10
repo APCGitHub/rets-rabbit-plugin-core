@@ -123,8 +123,8 @@ class QueryParser
 				} else {
 					//Single field multiple or values
 					foreach($value as $v) {
-						$this->builder->where(function ($q) use($field, $v, $operator) {
-							$q->orWhere($field, $operator, $v);
+						$this->builder->orWhere(function ($q) use($field, $v, $operator) {
+							$q->where($field, $operator, $v);
 						});
 					}
 				}
