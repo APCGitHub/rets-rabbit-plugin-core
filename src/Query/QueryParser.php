@@ -3,6 +3,8 @@
 namespace RetsRabbit\Query;
 
 
+use RetsRabbit\Exceptions\QueryException;
+
 class QueryParser
 {
 	/**
@@ -113,10 +115,26 @@ class QueryParser
 			$field = substr($fieldData, 0, $pos);
 			preg_match_all("/\(([^\)]*)\)/", $fieldData, $matches);
 
-			if(sizeof($matches) > 1) {
-				//Get first capturing group match
-				$operator = $matches[1][0];
+			//Check that we found a valid field name
+			if(sizeof($matches) < 2 || sizeof($matches[1]) < 1) {
+				throw new QueryException("Malformed field name query for: $field");
+			}
+		
+			//Get first capturing group match
+			$operator = $matches[1][0];
 
+			//Check for valid operators
+			if(!in_array($operator, $this->builder->operators)) {
+				throw new QueryException("Invalid operator: $operator");
+			}
+
+			if($operator == 'between') {
+				if(sizeof($value) != 2) {
+					throw new QueryException("The between operator requires two values separated by a pipe: v1|v2");
+				}
+
+				$this->builder->whereBetween($field, [$value[0], $value[1]]);
+			} else {
 				if(sizeof($value) < 2) {
 					//standard single field and value
 					$this->builder->where($field, $operator, $value[0]);
