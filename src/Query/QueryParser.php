@@ -195,9 +195,10 @@ class QueryParser
 			$p = strpos($f, '(');
 
 			if($p !== FALSE) {
-				$_f = substr($f, 0, $p);
-				$formattedFields[] = $_f;
+				$f = substr($f, 0, $p);
 			}
+
+			$formattedFields[] = $f;
 		}
 
 		//build the query
