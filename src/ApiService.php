@@ -20,7 +20,7 @@ class ApiService
      *
      * @var string
      */
-    private $baseApiEndpoint = 'https://api.retsrabbit.com';
+    private $baseApiEndpoint = 'https://werx.retsrabbit.com';
 
     /**
      * Default api version endpoint.
