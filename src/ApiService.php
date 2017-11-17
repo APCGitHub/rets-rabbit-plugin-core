@@ -119,8 +119,13 @@ class ApiService
      */
     public function overrideBaseApiEndpoint($apiEndpoint = '')
     {
-        if(!empty($apiEndpoint))
+        if(!empty($apiEndpoint)) {
+            if(substr($apiEndpoint, -1) === '/') {
+                $apiEndpoint = substr($apiEndpoint, 0, strlen($apiEndpoint) - 2);
+            }
+            
             $this->baseApiEndpoint = $apiEndpoint;
+        }
 
         return $this;
     }
