@@ -13,11 +13,47 @@ class QueryParser
 	private $builder;
 
 	/**
+	 * For EE CMS's we have to define a special set of "safe" keys
+	 * 
+	 * @var boolean
+	 */
+	private $alternateSyntax = false;
+
+	/**
+	 * Possible structure syntax keys
+	 * 
+	 * @var array
+	 */
+	private $syntaxes = array(
+		'operatorHousing' => array(
+			'standard' => array('\(', '\)'),
+			'alternate' => '-'
+		)
+		'separator' => array(
+			'standard' => '|',
+			'alternate' => '/'
+		)
+	);
+
+	/**
 	 * Constructor
 	 */
-	public function __construct()
+	public function __construct($standardSyntax = true)
 	{
 		$this->builder = new QueryBuilder();
+		$this->alternateSyntax = !$standardSyntax;
+	}
+
+	/**
+	 * Set alternate syntax to true.
+	 * 
+	 * @return $this
+	 */
+	public function useAlternateSyntax()
+	{
+		$this->alternateSyntax = true;
+
+		return $this;
 	}
 
 	/**
@@ -100,7 +136,7 @@ class QueryParser
 
 		if(sizeof($filters)) {
 			foreach($filters as $f => $value) {
-				$stmt = explode('|', $f);
+				$stmt = explode($this->getSeparatorKey(), $f);
 
 				if(sizeof($stmt) > 1) {
 					//Multiple fields means this is an OR statement
@@ -124,7 +160,7 @@ class QueryParser
 	 */
 	private function buildSingleFieldFilter($fieldData, $value)
 	{
-		$pos = strpos($fieldData, '(');
+		$pos = strpos($fieldData, $this->getOpeningOperatorHousingKey());
 
 		if($pos === FALSE) {
 			throw new QueryException("Malformed field name query for: $fieldData");
@@ -147,10 +183,10 @@ class QueryParser
 		}
 
 		if($operator == 'between') {
-			$value = explode('|', $value);
+			$value = explode($this->getSeparatorKey(), $value);
 
 			if(sizeof($value) != 2) {
-				throw new QueryException("The between operator requires two values separated by a pipe: v1|v2");
+				throw new QueryException("The between operator requires two values separated by a pipe or forward slash: v1|v2 or v1/v2");
 			}
 
 			$this->builder->whereBetween($field, [$value[0], $value[1]]);
@@ -181,9 +217,9 @@ class QueryParser
 	 */
 	private function buildMultiFieldFilter($fields, $value)
 	{
-		$value = explode('|', $value);
+		$value = explode($this->getSeparatorKey(), $value);
 		$lastField = $fields[sizeof($fields) - 1];
-		$pos = strpos($lastField, '(');
+		$pos = strpos($lastField, $this->getOpeningOperatorHousingKey());
 		$formattedFields = array();
 
 		if($pos === FALSE) {
@@ -202,7 +238,7 @@ class QueryParser
 
 		//Normalize all the fields
 		foreach($fields as $f) {
-			$p = strpos($f, '(');
+			$p = strpos($f, $this->getOpeningOperatorHousingKey());
 
 			if($p !== FALSE) {
 				$f = substr($f, 0, $p);
@@ -214,7 +250,7 @@ class QueryParser
 		//build the query
 		if($operator == 'between') {
 			if(sizeof($value) != 2) {
-				throw new QueryException("The between operator requires two values separated by a pipe: v1|v2");
+				throw new QueryException("The between operator requires two values separated by a pipe or forward slash: v1|v2 or v1/v2");
 			}
 
 			$this->builder->where(function ($q) use($formattedFields, $value) {
@@ -247,7 +283,7 @@ class QueryParser
 	{
 		if(isset($params['orderby'])) {
 			$data = $params['orderby'];
-			$orders = explode('|', $data);
+			$orders = explode($this->getSeparatorKey(), $data);
 
 			foreach($orders as $order) {
 				$parts = explode(':', $order);
@@ -273,7 +309,7 @@ class QueryParser
 		$select = null;
 
 		if(isset($params['select'])) {
-			$select = explode('|', $params['select']);
+			$select = explode($this->getSeparatorKey(), $params['select']);
 		}
 
 		return $select;
@@ -364,5 +400,94 @@ class QueryParser
 		}
 
 		return $filters;
+	}
+
+	private function operatorCaptureRegex()
+	{
+		$opening = $this->getOpeningOperatorHousingKey();
+		$closing = $this->getClosingOperatorHousingKey();
+		$regex = "/$opening([^\)]*)$closing/";
+
+		return $regex;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getOpeningOperatorHousingKey()
+	{
+		$key = '';
+
+		if($this->alternateSyntax) {
+			$key = $this->syntaxes['operatorHousing']['alternate'];
+
+			if(is_array($key)) {
+				$key = $key[0];
+			}
+		} else {
+			$key = $this->syntaxes['operatorHousing']['standard'];
+
+			if(is_array($key)) {
+				$key = $key[0];
+			}
+		}
+
+		return $key;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getClosingOperatorHousingKey()
+	{
+		$key = '';
+
+		if($this->alternateSyntax) {
+			$key = $this->syntaxes['operatorHousing']['alternate'];
+
+			if(is_array($key)) {
+				$key = $key[0];
+
+				if(sizeof($key) > 1) {
+					$key = $key[1];
+				}
+			}
+		} else {
+			$key = $this->syntaxes['operatorHousing']['standard'];
+
+			if(is_array($key)) {
+				$key = $key[0];
+
+				if(sizeof($key) > 1) {
+					$key = $key[1];
+				}
+			}
+		}
+
+		return $key;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getSeparatorKey()
+	{
+		$key = '';
+
+		if($this->alternateSyntax) {
+			$key = $this->syntaxes['separator']['alternate'];
+
+			if(is_array($key)) {
+				$key = $key[0];
+			}
+		} else {
+			$key = $this->syntaxes['separator']['standard'];
+
+			if(is_array($key)) {
+				$key = $key[0];
+			}
+		}
+
+		return $key;
 	}
 }
