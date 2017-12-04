@@ -28,7 +28,7 @@ class QueryParser
 		'operatorHousing' => array(
 			'standard' => array('\(', '\)'),
 			'alternate' => '-'
-		)
+		),
 		'separator' => array(
 			'standard' => '|',
 			'alternate' => '/'
@@ -160,14 +160,14 @@ class QueryParser
 	 */
 	private function buildSingleFieldFilter($fieldData, $value)
 	{
-		$pos = strpos($fieldData, $this->getOpeningOperatorHousingKey());
+		$pos = strpos($fieldData, $this->getOpeningOperatorHousingKey(true));
 
 		if($pos === FALSE) {
 			throw new QueryException("Malformed field name query for: $fieldData");
 		}
 		
 		$field = substr($fieldData, 0, $pos);
-		preg_match_all("/\(([^\)]*)\)/", $fieldData, $matches);
+		preg_match_all($this->operatorCaptureRegex(), $fieldData, $matches);
 
 		//Check that we found a valid field name
 		if(sizeof($matches) < 2 || sizeof($matches[1]) < 1) {
@@ -219,14 +219,14 @@ class QueryParser
 	{
 		$value = explode($this->getSeparatorKey(), $value);
 		$lastField = $fields[sizeof($fields) - 1];
-		$pos = strpos($lastField, $this->getOpeningOperatorHousingKey());
+		$pos = strpos($lastField, $this->getOpeningOperatorHousingKey(true));
 		$formattedFields = array();
 
 		if($pos === FALSE) {
 			throw new QueryException("Malformed field name query for: $lastField");
 		}
 
-		preg_match_all("/\(([^\)]*)\)/", $lastField, $matches);
+		preg_match_all($this->operatorCaptureRegex(), $lastField, $matches);
 
 		//Get first capturing group match
 		$operator = $matches[1][0];
@@ -238,7 +238,7 @@ class QueryParser
 
 		//Normalize all the fields
 		foreach($fields as $f) {
-			$p = strpos($f, $this->getOpeningOperatorHousingKey());
+			$p = strpos($f, $this->getOpeningOperatorHousingKey(true));
 
 			if($p !== FALSE) {
 				$f = substr($f, 0, $p);
@@ -402,6 +402,9 @@ class QueryParser
 		return $filters;
 	}
 
+	/**
+	 * @return string
+	 */
 	private function operatorCaptureRegex()
 	{
 		$opening = $this->getOpeningOperatorHousingKey();
@@ -412,9 +415,10 @@ class QueryParser
 	}
 
 	/**
+	 * @param  bool $escape
 	 * @return string
 	 */
-	private function getOpeningOperatorHousingKey()
+	private function getOpeningOperatorHousingKey($unescape = false)
 	{
 		$key = '';
 
@@ -431,6 +435,9 @@ class QueryParser
 				$key = $key[0];
 			}
 		}
+
+		if($unescape)
+			$key = stripcslashes($key);
 
 		return $key;
 	}
@@ -438,7 +445,7 @@ class QueryParser
 	/**
 	 * @return string
 	 */
-	private function getClosingOperatorHousingKey()
+	private function getClosingOperatorHousingKey($unescape = false)
 	{
 		$key = '';
 
@@ -456,13 +463,16 @@ class QueryParser
 			$key = $this->syntaxes['operatorHousing']['standard'];
 
 			if(is_array($key)) {
-				$key = $key[0];
-
 				if(sizeof($key) > 1) {
 					$key = $key[1];
+				} else {
+					$key = $ke[0];
 				}
 			}
 		}
+
+		if($unescape)
+			$key = stripcslashes($key);
 
 		return $key;
 	}
