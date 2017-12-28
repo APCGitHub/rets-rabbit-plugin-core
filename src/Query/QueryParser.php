@@ -1,9 +1,9 @@
 <?php
 
-namespace RetsRabbit\Query;
+namespace Anecka\RetsRabbit\Core\Query;
 
 
-use RetsRabbit\Exceptions\QueryException;
+use Anecka\RetsRabbit\Core\Exceptions\QueryException;
 
 class QueryParser
 {

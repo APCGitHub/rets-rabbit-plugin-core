@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use RetsRabbit\Query\QueryParser;
+use Anecka\RetsRabbit\Core\Query\QueryParser;
 use Tests\TestCase;
 
 class QueryParserTest extends TestCase
