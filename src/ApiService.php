@@ -4,7 +4,7 @@ namespace Anecka\RetsRabbit\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
-use RetsRabbit\Bridges\iCmsBridge;
+use Anecka\RetsRabbit\Core\Bridges\iCmsBridge;
 
 class ApiService
 {
