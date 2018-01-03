@@ -17,6 +17,9 @@ class ConfigTest extends TestCase
 		$this->assertNotNull($data);
 	}
 
+	/**
+	 * @test
+	 */
 	public function testSingleNestedFileAccess()
 	{
 		$config = Config::getInstance();
