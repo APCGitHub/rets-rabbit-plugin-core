@@ -4,12 +4,31 @@ namespace Anecka\RetsRabbit\Core\Support;
 
 class Config
 {
+	/**
+	 * Config instance
+	 * 
+	 * @var null
+	 */
 	protected static $instance = null;
+
+	/**
+	 * Cache of config datas
+	 * 
+	 * @var array
+	 */
 	private $configFiles = array();
 
+	/**
+	 * Hide the constructor from public access
+	 */
 	protected function __construct()
 	{}
 
+	/**
+	 * Get the Config instance
+	 * 
+	 * @return Config
+	 */
 	public static function getInstance()
 	{
 		if(is_null(self::$instance)) {
@@ -19,6 +38,12 @@ class Config
 		return self::$instance;
 	}
 
+	/**
+	 * Get a config value
+	 * 
+	 * @param  string $key
+	 * @return mixed
+	 */
 	public function get($key = '')
 	{
 		$parts = explode('.', $key);
