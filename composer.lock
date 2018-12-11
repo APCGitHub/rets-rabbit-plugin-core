@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "669de057dcacf249a900f9d3cca0d80e",
+    "content-hash": "d57e390e374c28f9c4b549b550ff8e12",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -12,15 +12,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "b8772dd9ecfd7b004f75a097543028e573e12586"
+                "reference": "9799bbcb90ed2df488adb0924169163156483e52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b8772dd9ecfd7b004f75a097543028e573e12586",
-                "reference": "b8772dd9ecfd7b004f75a097543028e573e12586",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/9799bbcb90ed2df488adb0924169163156483e52",
+                "reference": "9799bbcb90ed2df488adb0924169163156483e52",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "guzzlehttp/promises": "^1.0",
                 "guzzlehttp/psr7": "^1.4",
                 "php": ">=5.5"
@@ -28,7 +29,7 @@
             "require-dev": {
                 "ext-curl": "*",
                 "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
-                "psr/log": "^1.0"
+                "psr/log": "^1.1"
             },
             "suggest": {
                 "psr/log": "Required for using the Log middleware"
@@ -40,12 +41,12 @@
                 }
             },
             "autoload": {
-                "files": [
-                    "src/functions_include.php"
-                ],
                 "psr-4": {
                     "GuzzleHttp\\": "src/"
-                }
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -69,7 +70,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2018-11-16T13:39:00+00:00"
+            "time": "2018-12-07T08:18:25+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -128,24 +129,27 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "23e7d3812a82bdbff4a5cb8e4628bcc06eec5d68"
+                "reference": "5e61346ab1e1ca7d01d2f633bad9574d35717781"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/23e7d3812a82bdbff4a5cb8e4628bcc06eec5d68",
-                "reference": "23e7d3812a82bdbff4a5cb8e4628bcc06eec5d68",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5e61346ab1e1ca7d01d2f633bad9574d35717781",
+                "reference": "5e61346ab1e1ca7d01d2f633bad9574d35717781",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
                 "psr/http-message": "~1.0",
-                "ralouphie/getallheaders": "^2.0.5"
+                "ralouphie/getallheaders": "^2.0.5 || ^3.0.0"
             },
             "provide": {
                 "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
+            },
+            "suggest": {
+                "zendframework/zend-httphandlerrunner": "Emit PSR-7 responses"
             },
             "type": "library",
             "extra": {
@@ -187,7 +191,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2018-11-01T01:48:29+00:00"
+            "time": "2018-12-07T15:04:46+00:00"
         },
         {
             "name": "psr/http-message",
@@ -343,12 +347,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "291e13d808bec481eab83f301f7bff3e699ef603"
+                "reference": "fac7c487488520109302a604d13c28f15e0a9640"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/291e13d808bec481eab83f301f7bff3e699ef603",
-                "reference": "291e13d808bec481eab83f301f7bff3e699ef603",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/fac7c487488520109302a604d13c28f15e0a9640",
+                "reference": "fac7c487488520109302a604d13c28f15e0a9640",
                 "shasum": ""
             },
             "require": {
@@ -394,7 +398,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-11T19:48:54+00:00"
+            "time": "2018-12-11T14:13:08+00:00"
         }
     ],
     "packages-dev": [
@@ -605,7 +609,7 @@
         },
         {
             "name": "phpdocumentor/reflection-common",
-            "version": "dev-master",
+            "version": "2.0.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
@@ -706,37 +710,35 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "0.4.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7"
+                "reference": "287693547468b6f397a8685921325e8b3b5cdf4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/9c977708995954784726e25d0cd1dddf4e65b0f7",
-                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/287693547468b6f397a8685921325e8b3b5cdf4a",
+                "reference": "287693547468b6f397a8685921325e8b3b5cdf4a",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5 || ^7.0",
-                "phpdocumentor/reflection-common": "^1.0"
+                "php": ">=7.1",
+                "phpdocumentor/reflection-common": "~2.0.0-beta1"
             },
             "require-dev": {
-                "mockery/mockery": "^0.9.4",
-                "phpunit/phpunit": "^5.2||^4.8.24"
+                "mockery/mockery": "~1",
+                "phpunit/phpunit": "~6"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "0.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "phpDocumentor\\Reflection\\": [
-                        "src/"
-                    ]
+                    "phpDocumentor\\Reflection\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -749,7 +751,8 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2017-07-14T14:27:02+00:00"
+            "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
+            "time": "2018-10-30T15:32:22+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -1069,12 +1072,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "ef10fcb8c62460661761145e7742708c2862f016"
+                "reference": "99a564e53c9e673bd5b11b5fd5bdb9b54d646c29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ef10fcb8c62460661761145e7742708c2862f016",
-                "reference": "ef10fcb8c62460661761145e7742708c2862f016",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/99a564e53c9e673bd5b11b5fd5bdb9b54d646c29",
+                "reference": "99a564e53c9e673bd5b11b5fd5bdb9b54d646c29",
                 "shasum": ""
             },
             "require": {
@@ -1145,7 +1148,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-11-12T10:55:12+00:00"
+            "time": "2018-12-07T13:10:19+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1314,29 +1317,28 @@
         },
         {
             "name": "sebastian/diff",
-            "version": "dev-master",
+            "version": "2.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "6906fbe33455221909eab31d4b8b1517b94aba46"
+                "reference": "abcc70409ddfb310a8cb41ef0c2e857425438cf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/6906fbe33455221909eab31d4b8b1517b94aba46",
-                "reference": "6906fbe33455221909eab31d4b8b1517b94aba46",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/abcc70409ddfb310a8cb41ef0c2e857425438cf4",
+                "reference": "abcc70409ddfb310a8cb41ef0c2e857425438cf4",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": "^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.0",
-                "symfony/process": "^2 || ^3.3 || ^4"
+                "phpunit/phpunit": "^6.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "2.0-dev"
                 }
             },
             "autoload": {
@@ -1361,12 +1363,9 @@
             "description": "Diff implementation",
             "homepage": "https://github.com/sebastianbergmann/diff",
             "keywords": [
-                "diff",
-                "udiff",
-                "unidiff",
-                "unified diff"
+                "diff"
             ],
-            "time": "2018-10-30T05:42:15+00:00"
+            "time": "2017-12-14T11:32:19+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -1500,7 +1499,9 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0"
+                "php": "^7.2",
+                "sebastian/object-reflector": "^1.1.1",
+                "sebastian/recursion-context": "^3.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6.0"
@@ -1863,7 +1864,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.6"
+        "php": ">=7.0",
+        "ext-json": "*"
     },
     "platform-dev": []
 }
