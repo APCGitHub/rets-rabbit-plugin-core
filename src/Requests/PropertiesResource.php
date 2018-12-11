@@ -1,6 +1,6 @@
 <?php
 
-namespace Anecka\RetsRabbit\Core\Resources;
+namespace Apc\RetsRabbit\Core\Requests;
 
 class PropertiesResource extends aResource
 {

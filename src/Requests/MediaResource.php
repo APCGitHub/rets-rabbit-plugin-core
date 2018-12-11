@@ -1,21 +1,19 @@
 <?php
 
-namespace Anecka\RetsRabbit\Core\Resources;
+namespace Apc\RetsRabbit\Core\Requests;
 
-class OpenHousesResource extends aResource
+class MediaResource extends aResource
 {
     /**
-     * Fetch a single property
+     * Fetch a single media
      *
      * @param  string|int $id
      * @param  array  $params
      * @return ApiResponse
      */
-    public function singe($id, $params = array())
+    public function single($id, $params = array())
     {
-        $url = $this->api->buildApiUrl("/open-house('$id')");
-
-        return $this->api->getRequest($url, $params, true);
+        throw new \Exception("Not yet implemented.");
     }
 
     /**
@@ -26,7 +24,7 @@ class OpenHousesResource extends aResource
      */
     public function search($params = array())
     {
-        throw new \Exception("This method has not been implemented yet.");
+        throw new \Exception("Not yet implemented.");
     }
 
     /**
@@ -36,7 +34,7 @@ class OpenHousesResource extends aResource
      */
     public function metadata($params = array())
     {
-        $url = $this->api->buildApiUrl('/open-house/$metadata');
+        $url = $this->api->buildApiUrl('/media/$metadata');
 
         return $this->api->getRequest($url, $params, true);
     }

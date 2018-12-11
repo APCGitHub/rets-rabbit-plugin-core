@@ -1,8 +1,10 @@
 <?php
 
-namespace Anecka\RetsRabbit\Core;
 
-class ApiResponse
+namespace Apc\RetsRabbit\Core\Responses;
+
+
+abstract class BaseApiResponse
 {
     /**
      * Flag for if the response failed
@@ -29,6 +31,7 @@ class ApiResponse
      * Set the body of the response.
      *
      * @param array $content
+     * @return ApiResponse
      */
     public function setContent($content = [])
     {

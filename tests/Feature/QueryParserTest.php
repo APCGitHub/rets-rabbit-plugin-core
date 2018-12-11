@@ -2,14 +2,11 @@
 
 namespace Tests\Feature;
 
-use Anecka\RetsRabbit\Core\Query\QueryParser;
+use Apc\RetsRabbit\Core\Query\QueryParser;
 use Tests\TestCase;
 
 class QueryParserTest extends TestCase
 {
-	/**
-	 * @test
-	 */
 	public function testAlternativeSyntaxSingleField()
 	{
 		$params = [
@@ -19,15 +16,12 @@ class QueryParserTest extends TestCase
 		$queryParser = new QueryParser(false);
 		$q = $queryParser->format($params);
 		
-		$expected = "ListPrice ge 150000 and ListPrice le 175000";
+		$expected = 'ListPrice ge 150000 and ListPrice le 175000';
 		$actual = trim($q['$filter']);
 
 		$this->assertEquals($expected, $actual);
 	}
 
-	/**
-	 * @test
-	 */
 	public function testAlternativeSyntaxSingleFieldMultiVal()
 	{
 		$params = [
@@ -44,9 +38,6 @@ class QueryParserTest extends TestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	/**
-	 * @test
-	 */
 	public function testAlternativeSyntaxMultiFieldSingleVal()
 	{
 		$params = [
@@ -61,9 +52,6 @@ class QueryParserTest extends TestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	/**
-	 * @test
-	 */
 	public function testStandardSyntaxSingleField()
 	{
 		$params = [
@@ -73,15 +61,12 @@ class QueryParserTest extends TestCase
 		$queryParser = new QueryParser;
 		$q = $queryParser->format($params);
 		
-		$expected = "ListPrice ge 150000 and ListPrice le 175000";
+		$expected = 'ListPrice ge 150000 and ListPrice le 175000';
 		$actual = trim($q['$filter']);
 
 		$this->assertEquals($expected, $actual);
 	}
 
-	/**
-	 * @test
-	 */
 	public function testStandardSyntaxSingleFieldMultiVal()
 	{
 		$params = [
@@ -98,9 +83,6 @@ class QueryParserTest extends TestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-	/**
-	 * @test
-	 */
 	public function testStandardSyntaxMultiFieldSingleVal()
 	{
 		$params = [
