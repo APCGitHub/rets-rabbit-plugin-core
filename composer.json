@@ -1,7 +1,7 @@
 {
-    "name": "rets-rabbit/cms-plugin-core",
+    "name": "apcdatanalytics/rets-rabbit-cms-core",
     "description": "Core logic for the Rets Rabbit CMS Plugins",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "authors": [
         {
             "name": "Andrew Clinton",
@@ -12,7 +12,7 @@
     "type": "library",
     "minimum-stability": "dev",
     "require": {
-    	  "php": ">=7.0",
+        "php": ">=7.0",
         "guzzlehttp/guzzle": "^6.2",
         "symfony/yaml": "^3.3",
         "ext-json": "*"
