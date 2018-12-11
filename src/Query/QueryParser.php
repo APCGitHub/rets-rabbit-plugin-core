@@ -1,9 +1,9 @@
 <?php
 
-namespace Anecka\RetsRabbit\Core\Query;
+namespace Apc\RetsRabbit\Core\Query;
 
 
-use Anecka\RetsRabbit\Core\Exceptions\QueryException;
+use Apc\RetsRabbit\Core\Exceptions\QueryException;
 
 class QueryParser
 {
@@ -17,7 +17,7 @@ class QueryParser
 	 * 
 	 * @var boolean
 	 */
-	private $alternateSyntax = false;
+	private $alternateSyntax;
 
 	/**
 	 * Possible structure syntax keys
@@ -35,9 +35,11 @@ class QueryParser
 		)
 	);
 
-	/**
-	 * Constructor
-	 */
+    /**
+     * Constructor
+     *
+     * @param bool $standardSyntax
+     */
 	public function __construct($standardSyntax = true)
 	{
 		$this->builder = new QueryBuilder();
@@ -56,27 +58,28 @@ class QueryParser
 		return $this;
 	}
 
-	/**
-	 * Format the form params as a RESO query
-	 * 
-	 * @return array
-	 */
-	public function format($params)
+    /**
+     * Format the form params as a RESO query
+     *
+     * @param array|null $params
+     * @return array
+     * @throws QueryException
+     */
+	public function format(array $params = []): array
 	{
-		$data = array();
 		//Grab only {rr:field_name} fields
 		$params = $this->filterRetsRabbitFields($params);
 		//Remove the {rr} prefix from all fields
 		$params = $this->formatRetsRabbitFields($params);
 
 		//build for $filter
-		$this->buildFilters($params);
+		$this->_buildFilters($params);
 
 		//parse for $select
 		if(isset($params['select'])) {
 			$select = $this->formatSelect($params);
 
-			if(!is_null($select)) {
+			if($select !== null) {
 				$this->builder->select($select);
 			}
 		}
@@ -90,7 +93,7 @@ class QueryParser
 		if(isset($params['skip'])) {
 			$skip = $this->formatSkip($params);
 
-			if(!is_null($skip)) {
+			if($skip !== null) {
 				$this->builder->skip($skip);
 			}
 		}
@@ -99,14 +102,12 @@ class QueryParser
 		if(isset($params['top'])) {
 			$top = $this->formatTop($params);
 
-			if(!is_null($top)) {
+			if($top !== null) {
 				$this->builder->limit($top);
 			}
 		}
 
-		$data = $this->builder->get();
-
-		return $data;
+		return $this->builder->get();
 	}
 
 	/* 
@@ -115,52 +116,54 @@ class QueryParser
 	 | -------------------------------------------
 	 */
 
-	/**
-	 * Possible field query examples:
-	 *
-	 * 1. Multiple Fields && Single Value (or)
-	 * <input name="rr:StateOrProvince|PostalCode|City(eq)" value="columbus">
-	 *
-	 * 2. Single Field && Single Value (and)
-	 * <input name="rr:StateOrProvince" value="columbus">
-	 *
-	 * 3. Single Field && Multiple Values (or|between)
-	 * <input name="rr:PostalCode(ge)[]" value="">
-	 * <input name="rr:ListPrice(between)" value="35000|45000">
-	 * 
-	 * @param  $params array
-	 */
-	private function buildFilters($params = array())
+    /**
+     * Possible field query examples:
+     *
+     * 1. Multiple Fields && Single Value (or)
+     * <input name="rr:StateOrProvince|PostalCode|City(eq)" value="columbus">
+     *
+     * 2. Single Field && Single Value (and)
+     * <input name="rr:StateOrProvince" value="columbus">
+     *
+     * 3. Single Field && Multiple Values (or|between)
+     * <input name="rr:PostalCode(ge)[]" value="">
+     * <input name="rr:ListPrice(between)" value="35000|45000">
+     *
+     * @param  $params array
+     * @throws QueryException
+     */
+	private function _buildFilters($params = [])
 	{
-		$filters = $this->getFilterParams($params);
+		$filters = $this->_getFilterParams($params);
 
-		if(sizeof($filters)) {
+		if(count($filters)) {
 			foreach($filters as $f => $value) {
-				$stmt = explode($this->getSeparatorKey(), $f);
+				$stmt = explode($this->_getSeparatorKey(), $f);
 
-				if(sizeof($stmt) > 1) {
+				if(count($stmt) > 1) {
 					//Multiple fields means this is an OR statement
-					$this->buildMultiFieldFilter($stmt, $value);
-				} elseif (sizeof($stmt) == 1) {
+					$this->_buildMultiFieldFilter($stmt, $value);
+				} elseif (count($stmt) == 1) {
 					//Single field
-					$this->buildSingleFieldFilter($stmt[0], $value);
+					$this->_buildSingleFieldFilter($stmt[0], $value);
 				}
 			}
 		}
 	}
 
-	/**
-	 * Build a single field statement according to the following cases:
-	 *
-	 * 1. Single Field & Single Value (string)
-	 * 2. Single Field & Multiple Values (array)
-	 * 
-	 * @param string $fieldData
-	 * @param mixed $value
-	 */
-	private function buildSingleFieldFilter($fieldData, $value)
+    /**
+     * Build a single field statement according to the following cases:
+     *
+     * 1. Single Field & Single Value (string)
+     * 2. Single Field & Multiple Values (array)
+     *
+     * @param string $fieldData
+     * @param mixed $value
+     * @throws QueryException
+     */
+	private function _buildSingleFieldFilter($fieldData, $value)
 	{
-		$pos = strpos($fieldData, $this->getOpeningOperatorHousingKey(true));
+		$pos = strpos($fieldData, $this->_getOpeningOperatorHousingKey(true));
 
 		if($pos === FALSE) {
 			throw new QueryException("Malformed field name query for: $fieldData");
@@ -170,7 +173,7 @@ class QueryParser
 		preg_match_all($this->operatorCaptureRegex(), $fieldData, $matches);
 
 		//Check that we found a valid field name
-		if(sizeof($matches) < 2 || sizeof($matches[1]) < 1) {
+		if(count($matches) < 2 || count($matches[1]) < 1) {
 			throw new QueryException("Malformed field name query for: $field");
 		}
 	
@@ -183,20 +186,20 @@ class QueryParser
 		}
 
 		if($operator == 'between') {
-			$value = explode($this->getSeparatorKey(), $value);
+			$value = explode($this->_getSeparatorKey(), $value);
 
-			if(sizeof($value) != 2) {
-				throw new QueryException("The between operator requires two values separated by a pipe or forward slash: v1|v2 or v1/v2");
+			if(count($value) != 2) {
+				throw new QueryException('The between operator requires two values separated by a pipe or forward slash: v1|v2 or v1/v2');
 			}
 
 			$this->builder->whereBetween($field, [$value[0], $value[1]]);
 		} else {
 			if(is_array($value)) {
 				//Single field multiple {or} values
-				if(sizeof($value) == 1) {
+				if(count($value) == 1) {
 					$this->builder->where($field, $operator, $value[0]);
 				} else {
-					$this->builder->where(function ($q) use($value, $field, $operator) {
+					$this->builder->where(function (QueryBuilder $q) use($value, $field, $operator) {
 						foreach($value as $v) {
 							$q->orWhere($field, $operator, $v);
 						}
@@ -209,18 +212,19 @@ class QueryParser
 		}
 	}
 
-	/**
-	 * Build a multi {or} field query
-	 * 
-	 * @param  array $fields
-	 * @param  string $value
-	 */
-	private function buildMultiFieldFilter($fields, $value)
+    /**
+     * Build a multi {or} field query
+     *
+     * @param  array $fields
+     * @param  string $value
+     * @throws QueryException
+     */
+	private function _buildMultiFieldFilter($fields, $value)
 	{
-		$value = explode($this->getSeparatorKey(), $value);
-		$lastField = $fields[sizeof($fields) - 1];
-		$pos = strpos($lastField, $this->getOpeningOperatorHousingKey(true));
-		$formattedFields = array();
+		$value = explode($this->_getSeparatorKey(), $value);
+		$lastField = $fields[count($fields) - 1];
+		$pos = strpos($lastField, $this->_getOpeningOperatorHousingKey(true));
+		$formattedFields = [];
 
 		if($pos === FALSE) {
 			throw new QueryException("Malformed field name query for: $lastField");
@@ -238,7 +242,7 @@ class QueryParser
 
 		//Normalize all the fields
 		foreach($fields as $f) {
-			$p = strpos($f, $this->getOpeningOperatorHousingKey(true));
+			$p = strpos($f, $this->_getOpeningOperatorHousingKey(true));
 
 			if($p !== FALSE) {
 				$f = substr($f, 0, $p);
@@ -249,24 +253,24 @@ class QueryParser
 
 		//build the query
 		if($operator == 'between') {
-			if(sizeof($value) != 2) {
-				throw new QueryException("The between operator requires two values separated by a pipe or forward slash: v1|v2 or v1/v2");
+			if(count($value) != 2) {
+				throw new QueryException('The between operator requires two values separated by a pipe or forward slash: v1|v2 or v1/v2');
 			}
 
-			$this->builder->where(function ($q) use($formattedFields, $value) {
+			$this->builder->where(function (QueryBuilder $q) use($formattedFields, $value) {
 				foreach($formattedFields as $f) {
 					$q->whereBetween($f, [$value[0], $value[1]], 'or');
 				}
 			});
 		} else {
-			if(sizeof($value) > 1) {
+			if(count($value) > 1) {
 				throw new QueryException('Multiple values for a multi field search are not supported.');
 			}
 
 			$value = $value[0];
 
 			//standard single field and value
-			$this->builder->where(function ($q) use($formattedFields, $operator, $value) {
+			$this->builder->where(function (QueryBuilder $q) use($formattedFields, $operator, $value) {
 				foreach($formattedFields as $f) {
 					$q->orWhere($f, $operator, $value);
 				}
@@ -279,18 +283,18 @@ class QueryParser
 	 *
 	 * @param  $params array
 	 */
-	private function buildOrderBy($params = array())
+	private function buildOrderBy($params = [])
 	{
 		if(isset($params['orderby'])) {
 			$data = $params['orderby'];
-			$orders = explode($this->getSeparatorKey(), $data);
+			$orders = explode($this->_getSeparatorKey(), $data);
 
 			foreach($orders as $order) {
 				$parts = explode(':', $order);
 				$dir = 'asc';
 				$field = $parts[0];
 
-				if(sizeof($parts) == 2) {
+				if(count($parts) == 2) {
 					$dir = $parts[1];
 				}
 
@@ -304,12 +308,12 @@ class QueryParser
 	 * @param  $params array
 	 * @return mixed
 	 */
-	private function formatSelect($params = array())
+	private function formatSelect($params = [])
 	{
 		$select = null;
 
 		if(isset($params['select'])) {
-			$select = explode($this->getSeparatorKey(), $params['select']);
+			$select = explode($this->_getSeparatorKey(), $params['select']);
 		}
 
 		return $select;
@@ -319,30 +323,18 @@ class QueryParser
 	 * @param  $params array
 	 * @return mixed
 	 */
-	private function formatSkip($params = array())
+	private function formatSkip($params = [])
 	{
-		$skip = null;
-
-		if(isset($params['skip'])) {
-			$skip = $params['skip'];
-		}
-
-		return $skip;
+		return $params['skip'] ?? null;
 	}
 
 	/**
 	 * @param  $params array
 	 * @return mixed
 	 */
-	private function formatTop($params = array())
+	private function formatTop($params = [])
 	{
-		$top = null;
-
-		if(isset($params['top'])) {
-			$top = $params['top'];
-		}
-
-		return $top;
+		return $params['top'] ?? null;
 	}
 
 	/**
@@ -351,10 +343,10 @@ class QueryParser
 	 * @param  array $params
 	 * @return array
 	 */
-	private function filterRetsRabbitFields($params = array())
+	private function filterRetsRabbitFields($params = []): array
 	{
 		$rrFields = array_filter($params, function ($key) {
-			return substr($key, 0, 2) == 'rr';
+			return strpos($key, 'rr') === 0;
 		}, ARRAY_FILTER_USE_KEY);
 
 		return $rrFields;
@@ -366,9 +358,9 @@ class QueryParser
 	 * @param  array $params
 	 * @return array
 	 */
-	private function formatRetsRabbitFields($params = array())
+	private function formatRetsRabbitFields($params = []): array
 	{
-		$newParams = array();
+		$newParams = [];
 
 		foreach($params as $key => $values) {
 			if($values == '') {
@@ -388,9 +380,9 @@ class QueryParser
 	 * @param  array $params
 	 * @return array
 	 */
-	private function getFilterParams($params = array())
+	private function _getFilterParams($params = []): array
 	{
-		$filters = array();
+		$filters = [];
 		$passThrough = array('orderby', 'select', 'top', 'skip');
 
 		foreach($params as $key => $values) {
@@ -405,23 +397,20 @@ class QueryParser
 	/**
 	 * @return string
 	 */
-	private function operatorCaptureRegex()
+	private function operatorCaptureRegex(): string
 	{
-		$opening = $this->getOpeningOperatorHousingKey();
-		$closing = $this->getClosingOperatorHousingKey();
-		$regex = "/$opening([^\)]*)$closing/";
+		$opening = $this->_getOpeningOperatorHousingKey();
+		$closing = $this->_getClosingOperatorHousingKey();
 
-		return $regex;
+		return "/$opening([^\)]*)$closing/";
 	}
 
-	/**
-	 * @param  bool $escape
-	 * @return string
-	 */
-	private function getOpeningOperatorHousingKey($unescape = false)
+    /**
+     * @param bool $unescape
+     * @return string
+     */
+	private function _getOpeningOperatorHousingKey($unescape = false): string
 	{
-		$key = '';
-
 		if($this->alternateSyntax) {
 			$key = $this->syntaxes['operatorHousing']['alternate'];
 
@@ -436,26 +425,26 @@ class QueryParser
 			}
 		}
 
-		if($unescape)
-			$key = stripcslashes($key);
+		if($unescape) {
+            $key = stripcslashes($key);
+        }
 
 		return $key;
 	}
 
-	/**
-	 * @return string
-	 */
-	private function getClosingOperatorHousingKey($unescape = false)
+    /**
+     * @param bool $unescape
+     * @return string
+     */
+	private function _getClosingOperatorHousingKey($unescape = false): string
 	{
-		$key = '';
-
 		if($this->alternateSyntax) {
 			$key = $this->syntaxes['operatorHousing']['alternate'];
 
 			if(is_array($key)) {
 				$key = $key[0];
 
-				if(sizeof($key) > 1) {
+				if(count($key) > 1) {
 					$key = $key[1];
 				}
 			}
@@ -463,7 +452,7 @@ class QueryParser
 			$key = $this->syntaxes['operatorHousing']['standard'];
 
 			if(is_array($key)) {
-				if(sizeof($key) > 1) {
+				if(count($key) > 1) {
 					$key = $key[1];
 				} else {
 					$key = $ke[0];
@@ -471,8 +460,9 @@ class QueryParser
 			}
 		}
 
-		if($unescape)
-			$key = stripcslashes($key);
+		if($unescape) {
+            $key = stripcslashes($key);
+        }
 
 		return $key;
 	}
@@ -480,10 +470,8 @@ class QueryParser
 	/**
 	 * @return string
 	 */
-	private function getSeparatorKey()
+	private function _getSeparatorKey(): string
 	{
-		$key = '';
-
 		if($this->alternateSyntax) {
 			$key = $this->syntaxes['separator']['alternate'];
 

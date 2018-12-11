@@ -1,6 +1,6 @@
 <?php
 
-namespace Anecka\RetsRabbit\Core\Query;
+namespace Apc\RetsRabbit\Core\Query;
 
 
 class QueryBuilder
@@ -8,23 +8,23 @@ class QueryBuilder
 	/**
 	 * Array of where clauses.
 	 * 
-	 * @var Array
+	 * @var array
 	 */
-	public $wheres = array();
+	public $wheres = [];
 
 	/**
 	 * Array of order by clauses.
 	 * 
-	 * @var Array
+	 * @var array
 	 */
-	public $orders = array();
+	public $orders = [];
 
     /**
      * Array of selects
      * 
      * @var array
      */
-    public $selects = array();
+    public $selects = [];
 
     /**
      * @var integer
@@ -41,16 +41,16 @@ class QueryBuilder
 	 * 
 	 * @var array
 	 */
-	protected $bindings = array(
-        'where' => array(),
-    );
+	protected $bindings = [
+        'where' => [],
+    ];
 
 	/**
 	 * Available comparison operators.
 	 * 
 	 * @var array
 	 */
-    public $operators = array(
+    public $operators = [
         'eq',
         'lt',
         'gt',
@@ -61,7 +61,7 @@ class QueryBuilder
         'endswith',
         'startswith',
         'between',
-    );
+    ];
 
     /**
      * Processes the query builder into an ODATA query string.
@@ -88,7 +88,7 @@ class QueryBuilder
      * @param  string 	$boolean
      * @return $this
      */
-	public function where($field, $operator = null, $value = null, $modifier = null, $boolean = 'and')
+	public function where($field, $operator = null, $value = null, $modifier = null, $boolean = 'and'): self
 	{
 		//If field is a function then the caller is trying to create a nested
 		//statement. Add to the where stack and immediately return.
@@ -120,7 +120,7 @@ class QueryBuilder
      * @param  string 	$modifier
 	 * @return $this
 	 */
-	public function orWhere($field, $operator = null, $value = null, $modifier = null)
+	public function orWhere($field, $operator = null, $value = null, $modifier = null): self
 	{
 		$this->where($field, $operator, $value, $modifier, 'or');
 
@@ -136,7 +136,7 @@ class QueryBuilder
 	 * @param  boolean $not     
 	 * @return $this
 	 */
-	public function whereBetween($field, array $values, $boolean = 'and', $not = false)
+	public function whereBetween($field, array $values, $boolean = 'and', $not = false): self
     {
         $type = 'Between';
 
@@ -154,12 +154,12 @@ class QueryBuilder
      * @param  string $direction
      * @return $this
      */
-    public function orderBy($field, $direction = 'asc')
+    public function orderBy($field, $direction = 'asc'): self
     {
-        $this->orders[] = array(
+        $this->orders[] = [
             'field' => $field,
             'direction' => strtolower($direction) == 'desc' ? 'desc' : 'asc',
-        );
+        ];
 
         return $this;
     }
@@ -170,7 +170,7 @@ class QueryBuilder
      * @param  integer $skip
      * @return $this
      */
-    public function skip($skip = 0)
+    public function skip($skip = 0): self
     {
         if($skip >= 0) {
             $this->offset = $skip;
@@ -185,7 +185,7 @@ class QueryBuilder
      * @param  integer $limit
      * @return $this
      */
-    public function limit($limit = 0)
+    public function limit($limit = 0): self
     {
 
         if($limit >= 0) {
@@ -201,7 +201,7 @@ class QueryBuilder
      * @param  array
      * @return $this
      */
-    public function select($columns = array())
+    public function select($columns = []): self
     {
         $this->selects = is_array($columns) ? $columns : func_get_args();
 
@@ -211,15 +211,15 @@ class QueryBuilder
     /**
      * Add a nested where statement to the query.
      * 
-     * @param  function $callback 
+     * @param  mixed $callback
      * @param  string 	$boolean  
      * @return $this
      */
-	public function whereNested($callback, $boolean = 'and')
+	public function whereNested($callback, $boolean = 'and'): self
 	{
 		$query = new self();
 
-        call_user_func($callback, $query);
+        $callback($query);
 
         return $this->addNestedWhereQuery($query, $boolean);
 	}
@@ -230,7 +230,7 @@ class QueryBuilder
 	 * @param 	string 			$boolean
 	 * @return  $this
 	 */
-	public function addNestedWhereQuery($query, $boolean = 'and')
+	public function addNestedWhereQuery($query, $boolean = 'and'): self
     {
         if (count($query->wheres)) {
             $type = 'Nested';
@@ -246,20 +246,18 @@ class QueryBuilder
     /**
      * Add a binding to the query.
      * 
-     * @param 	any 	$value
+     * @param 	mixed 	$value
      * @param 	string 	$type 
      * @return 	$this
      */
-	public function addBinding($value, $type = 'where')
+	public function addBinding($value, $type = 'where'): self
     {
         if (is_array($value)) {
         	//Remove other keys which don't belong if not matching {$type}
         	$keys = array_keys($this->bindings);
         	foreach($keys as $key){
-        		if(array_key_exists($key, $value)){
-        			if($key !== $type){
-        				unset($value[$key]);
-        			}
+        		if(array_key_exists($key, $value) && $key !== $type){
+                    unset($value[$key]);
         		}
         	}
 
@@ -276,7 +274,7 @@ class QueryBuilder
      * 
      * @return array
      */
-    public function getBindings()
+    public function getBindings(): array
     {
     	return $this->bindings;
     }
@@ -284,12 +282,10 @@ class QueryBuilder
     /**
      * Build the ODATA query string from the builder.
      * 
-     * @return string
+     * @return array
      */
-    public function get()
+    public function get(): array
     {
-    	$results = $this->processor->build();
-
-    	return $results;
+    	return $this->processor->build();
     }
 }

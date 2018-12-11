@@ -1,6 +1,6 @@
 <?php
 
-namespace Anecka\RetsRabbit\Core\Exceptions;
+namespace Apc\RetsRabbit\Core\Exceptions;
 
 class QueryException extends \Exception
 {}
