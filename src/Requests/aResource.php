@@ -2,23 +2,23 @@
 
 namespace Apc\RetsRabbit\Core\Requests;
 
-use Apc\RetsRabbit\Core\Clients\OldRetsRabbitClient;
+use Apc\RetsRabbit\Core\Clients\RetsRabbitClient;
 
 abstract class aResource implements iResource
 {
     /**
      * ApiService handle
      *
-     * @var OldRetsRabbitClient
+     * @var RetsRabbitClient
      */
     protected $api = null;
 
     /**
      * Constructor for MediaResource
      *
-     * @param OldRetsRabbitClient $api
+     * @param RetsRabbitClient $api
      */
-    public function __construct(OldRetsRabbitClient $api)
+    public function __construct(RetsRabbitClient $api)
     {
         $this->api = $api;
     }
