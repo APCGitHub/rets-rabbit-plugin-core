@@ -9,7 +9,7 @@ use Apc\RetsRabbit\Core\Requests\PropertyRequest;
 trait PropertyResourceTrait
 {
     /**
-     * @return PropertyRequest
+     * @return \Apc\RetsRabbit\Core\Requests\PropertyRequest
      */
     public function property(): PropertyRequest
     {
